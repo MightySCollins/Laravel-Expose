@@ -45,6 +45,7 @@ class ExposeServiceProvider extends ServiceProvider
             $filters->load();
             $logger = Log::getMonolog();
             $expose = new Expose($filters, $logger);
+            $expose->setCache(config('expose.cache'));
             $app->refresh('request', $expose, 'setRequest');
             return $expose;
         });
