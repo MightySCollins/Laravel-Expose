@@ -1,0 +1,4 @@
+suites:
+  library_suite:
+    namespace: SCollins\Laravel-Expose\Tests
+    psr4_prefix: SCollins\Laravel-Expose\Tests
