@@ -62,8 +62,7 @@ class ExposeServiceProvider extends ServiceProvider
             }
 
             $expose->setLogger($expose->makeLogger());
-
-            $app->refresh('request', $expose, 'setRequest');
+            
             return $expose;
         });
     }
