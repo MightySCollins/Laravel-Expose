@@ -35,8 +35,21 @@ class ExposeRequest extends Job implements ShouldQueue
     {
         Expose::run($this->input);
         if (Expose::getImpact() > 0) {
-            Expose::getLogger()->warning('Expose risk level ' . Expose::getImpact() . ' for ' . $this->ip . ':'.
-                Expose::getReports());
+            Expose::getLogger()->warning('Expose risk level ' . Expose::getImpact() . ' for ' . $this->ip);
         }
+    }
+
+    /**
+     * @todo Implement
+     */
+    protected function formatReports($reports)
+    {
+        $detected = '';
+        foreach ($reports as $report) {
+            $detected .= 'VarName ' . $report->getVarName;
+            $detected .= ' VarValue '  . $report->getVarValue;
+            $detected .= ' VarPath ' . $report->getVarPath;
+        }
+        return $detected;
     }
 }
