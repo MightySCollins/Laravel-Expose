@@ -2,7 +2,6 @@
 
 namespace SCollins\LaravelExpose;
 
-use Log;
 use Expose\FilterCollection;
 use Illuminate\Container\Container;
 use Illuminate\Support\ServiceProvider;
@@ -16,9 +15,17 @@ class ExposeServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(__DIR__ . '/../config/expose.php', 'expose');
+
+        if (config('expose.cache', false) !== false) {
+            $storage = new Storage($this->app['files'], config('expose.cache'));
+            $storage->createStorage();
+            $storage->garbageCollect();
+        }
+
         $this->registerExpose();
 
-        $this->mergeConfigFrom(__DIR__ . '../config/expose.php', 'expose');
+        $this->app->alias('expose', Expose::class);
     }
 
     /**
@@ -43,13 +50,22 @@ class ExposeServiceProvider extends ServiceProvider
         $this->app->singleton('expose', function (Container $app) {
             $filters = new FilterCollection();
             $filters->load();
-            $logger = Log::getMonolog();
-            $expose = new Expose($filters, $logger);
-            $expose->setCache(config('expose.cache'));
+
+            $expose = new Expose($filters);
+
+            if (config('expose.mail.enabled', false) === true) {
+                $expose->setNotify($expose->makeNotify());
+            }
+
+            if (config('expose.cache', false) !== false) {
+                $expose->setCache($expose->makeCache());
+            }
+
+            $expose->setLogger($expose->makeLogger());
+
             $app->refresh('request', $expose, 'setRequest');
             return $expose;
         });
-        $this->app->alias('expose', Expose::class);
     }
 
     /**

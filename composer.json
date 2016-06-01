@@ -1,6 +1,6 @@
 {
   "name": "scollins/laravel-expose",
-  "license": "mit",
+  "license": "MIT",
   "repositories": [
     {
       "type": "vcs",
