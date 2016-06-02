@@ -2,6 +2,7 @@
 
 namespace SCollins\LaravelExpose\Jobs;
 
+use Cache;
 use Expose;
 use App\Jobs\Job;
 use Illuminate\Queue\SerializesModels;
@@ -12,7 +13,7 @@ class ExposeRequest extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
-    protected $input;
+    protected $id;
     protected $ip;
 
     /**
@@ -20,9 +21,9 @@ class ExposeRequest extends Job implements ShouldQueue
      * @param array $input
      * @param string $ip
      */
-    public function __construct(array $input, string $ip)
+    public function __construct(string $id, string $ip)
     {
-        $this->input = $input;
+        $this->id = $id;
         $this->ip = $ip;
     }
 
@@ -33,7 +34,7 @@ class ExposeRequest extends Job implements ShouldQueue
      */
     public function handle()
     {
-        Expose::run($this->input);
+        Expose::run(Cache::pull($this->id));
         if (Expose::getImpact() > 0) {
             Expose::getLogger()->warning('Expose risk level ' . Expose::getImpact() . ' for ' . $this->ip);
         }

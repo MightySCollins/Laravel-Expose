@@ -2,11 +2,11 @@
 
 namespace SCollins\LaravelExpose;
 
+use Log;
 use Expose\Queue;
 use Expose\Manager;
 use Expose\Notify\Email;
 use Expose\FilterCollection;
-use Log;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;

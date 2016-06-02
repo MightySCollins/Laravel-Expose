@@ -2,6 +2,7 @@
 
 namespace SCollins\LaravelExpose\Middleware;
 
+use Cache;
 use Closure;
 use SCollins\LaravelExpose\Jobs\ExposeRequest;
 
@@ -18,9 +19,12 @@ class Expose
     public function handle($request, Closure $next, $guard = null)
     {
         if (count($request->all()) > 0) {
-            dispatch(new ExposeRequest($request->all(), $request->ip()));
+            $id = 'expose-' . uniqid();
+            Cache::put($id, $request->except(config('expose.ignore')), 5);
+            dispatch(new ExposeRequest($id, $request->ip()));
         }
 
         return $next($request);
     }
+
 }

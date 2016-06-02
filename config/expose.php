@@ -5,6 +5,8 @@ return [
 
     'logFile' => storage_path('logs/expose.log'),
 
+    'ignore' => ['password', '_token'],
+
     'mail' => [
         'to' => '',
         'from' => ''
