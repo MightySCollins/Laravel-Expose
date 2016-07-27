@@ -34,9 +34,11 @@ class ExposeRequest extends Job implements ShouldQueue
      */
     public function handle()
     {
-        Expose::run(Cache::pull($this->id));
-        if (Expose::getImpact() > 0) {
-            Expose::getLogger()->warning('Expose risk level ' . Expose::getImpact() . ' for ' . $this->ip);
+        if (Cache::has($this->id)) {
+            Expose::run(Cache::pull($this->id));
+            if (Expose::getImpact() > 0) {
+                Expose::getLogger()->warning('Expose risk level ' . Expose::getImpact() . ' for ' . $this->ip);
+            }
         }
     }
 
