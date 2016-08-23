@@ -36,7 +36,7 @@ class ExposeServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '../config/expose.php' => config_path('expose.php'),
+            __DIR__ . '/../config/expose.php' => config_path('expose.php'),
         ]);
     }
 
